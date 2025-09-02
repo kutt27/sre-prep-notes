@@ -1,6 +1,3 @@
-# Core Jenkins Functions and Administration
----
-
 ## Jenkins Architecture
 ---
 #### Jenkins Controller/Agent:
@@ -9,7 +6,7 @@ In Jenkins, the term “master/slave” has been replaced with **controller/agen
 
 #### Architecture
 
-![Controller/Agent Architecture](/images/jenkins_architecture.png)
+![Controller/Agent Architecture](jenkins_architecture.png)
 
 Key differences and roles
 - **Controller (Master):**
