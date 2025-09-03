@@ -3,7 +3,7 @@
 
 Docker's core function is to solve the problem of "it works on my machine" by ensuring that an application and its environment are bundled together. The key components include:
 
-![Docker Image](docker_instance.png)
+![Docker Image](../images/docker_instance.png)
 
 - **Images:** A **Docker image** is a read-only template that contains the application and all its dependencies. It's essentially a blueprint for a container. You can think of it as a class in object-oriented programming.
 - **Containers:** A **Docker container** is a runnable instance of an image. It's the lightweight, isolated environment where the application actually runs. Multiple containers can run from the same image, each with its own state and isolated resources.
@@ -25,7 +25,7 @@ The **build, ship, run** workflow mentioned in the image is central to Docker's 
 
 Both containers and virtual machines (VMs) are forms of virtualization that allow us to run isolated environments on a single physical host, but they do so in fundamentally different ways. The key distinction lies in their architecture, which impacts their efficiency, portability, and level of isolation.
 
-![[virtual_machine_vs_containers.png]]
+![Containers vs Virtual Machines](../images/virtual_machine_vs_containers.png)
 
 ---
 
@@ -60,7 +60,7 @@ This shared-kernel architecture makes containers extremely **lightweight** and *
 
 Without containerization, developers and sysadmins face several significant challenges when deploying and managing applications. The image you provided illustrates a few of these key issues, including environment inconsistencies and difficulty with scalability.
 
-![[issues_with_non_containers.png]]
+![Issue with non-containers](../images/issues_with_non_containers.png)
 
 ---
 ### 1. "It Works on My Machine" Problem 💻
@@ -92,11 +92,11 @@ In summary, non-containerized applications are difficult to develop and deploy r
 
 # With Containers
 
-![[with_containers.png]]
+![With containers](../images/with_containers.png)
 
 # Simple docker flow
 
-![[docker_flow.png]]
+![Docker flow](../images/docker_flow.png)
 
 ### Step 1: The Dockerfile
 
@@ -122,8 +122,7 @@ By following this flow, Docker ensures that the same packaged application runs r
 
 # Docker Architecture
 
-![[docker_architecture.png]]
-
+![Docker Architecture](../images/docker_architecture.png)
 #### 1. The Client Sends a Command
 
 The flow begins with the **Docker Client**. This is the command-line interface (CLI) we use to interact with Docker by typing commands like `docker build`, `docker pull`, or `docker run`. The client's job is to translate your human-readable commands into REST API requests.

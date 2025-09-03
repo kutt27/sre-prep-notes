@@ -27,7 +27,7 @@ Terraform is a popular **Infrastructure as Code (IaC)** tool that helps us provi
 
 ### How it Works
 
-![[terraform_working.png]]
+![Terraform Working](../images/terraform_working.png)
 
 Terraform's core workflow is a cycle of writing, planning, and applying. It works by communicating with cloud providers' APIs through "providers," which are plugins that allow Terraform to manage resources on platforms like AWS, Google Cloud, and Azure.
 
