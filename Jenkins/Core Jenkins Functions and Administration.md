@@ -62,15 +62,15 @@ Static agents are manually configured, long-running worker nodes that stay conne
 - On-premises or cloud VMs with persistent IPs and hostnames
 
 **Pros:**
-- Immediate availability — no startup delay
+- Immediate availability - no startup delay
 - Predictable performance and environment state
-- Easier to debug — logs, files, and state persist between builds
+- Easier to debug - logs, files, and state persist between builds
 
 **Cons:**
-- Resource waste — idle agents still consume CPU/memory/storage
-- Maintenance overhead — manual patching, updates, cleanup
-- Scaling challenges — adding/removing requires manual intervention
-- Risk of “snowflake” environments — configuration drift over time
+- Resource waste - idle agents still consume CPU/memory/storage
+- Maintenance overhead - manual patching, updates, cleanup
+- Scaling challenges - adding/removing requires manual intervention
+- Risk of “snowflake” environments - configuration drift over time
 
 **Use when:**
 - You have predictable, consistent workloads
@@ -91,15 +91,15 @@ Dynamic agents are provisioned automatically by the controller (via plugins like
 - Docker containers via Docker plugin or Docker-in-Docker setups
 
 **Pros:**
-- **Cost-efficient** — pay only for resources while builds run
-- **Auto-scaling** — handle spikes without manual intervention
-- **Clean slate every time** — no state or pollution between builds
-- **High availability** — failed agents don’t block the queue; new ones spawn
+- **Cost-efficient** - pay only for resources while builds run
+- **Auto-scaling** - handle spikes without manual intervention
+- **Clean slate every time** - no state or pollution between builds
+- **High availability** - failed agents don’t block the queue; new ones spawn
 
 **Cons:**
-- Startup latency — provisioning can add seconds or minutes to job start
+- Startup latency - provisioning can add seconds or minutes to job start
 - Requires infrastructure setup (K8s cluster, cloud credentials, templates)
-- Debugging is harder — agents vanish after job completion
+- Debugging is harder - agents vanish after job completion
 - Potential for orphaned resources if cleanup fails
 
 **Use when:**
@@ -109,91 +109,74 @@ Dynamic agents are provisioned automatically by the controller (via plugins like
 - Security requires isolation per job or team
 
 ---
-
 ### Key Comparison Table
 
-| Feature                | Static Agent                     | Dynamic Agent                          |
-|------------------------|----------------------------------|----------------------------------------|
-| Lifecycle              | Long-running, persistent         | Short-lived, ephemeral                 |
-| Provisioning           | Manual                           | Automatic (via plugin or cloud)        |
-| Scaling                | Manual scaling                   | Auto-scaling based on queue/load       |
-| Cost                   | Higher (always-on)               | Lower (pay-per-use)                    |
-| Environment Consistency| Risk of drift                    | Always clean, reproducible             |
-| Debugging              | Easier (persistent logs/state)   | Harder (logs must be captured/exported)|
-| Ideal for              | Stable, stateful workloads       | Variable, stateless, secure workloads  |
+| Feature                 | Static Agent                   | Dynamic Agent                           |
+| ----------------------- | ------------------------------ | --------------------------------------- |
+| Lifecycle               | Long-running, persistent       | Short-lived, ephemeral                  |
+| Provisioning            | Manual                         | Automatic (via plugin or cloud)         |
+| Scaling                 | Manual scaling                 | Auto-scaling based on queue/load        |
+| Cost                    | Higher (always-on)             | Lower (pay-per-use)                     |
+| Environment Consistency | Risk of drift                  | Always clean, reproducible              |
+| Debugging               | Easier (persistent logs/state) | Harder (logs must be captured/exported) |
+| Ideal for               | Stable, stateful workloads     | Variable, stateless, secure workloads   |
 
 ---
 
 ### How Jenkins Chooses Between Them
 
-The controller doesn’t “prefer” one over the other — **you configure agent types via labels and cloud templates**.
+The controller doesn’t “prefer” one over the other - **you configure agent types via labels and cloud templates**.
 
 - In **Freestyle jobs**: Use “Restrict where this project can be run” with agent labels.
 - In **Declarative Pipelines**: Use `agent { label 'linux-dynamic' }` or `agent { kubernetes { ... } }`
 - In **Scripted Pipelines**: Use `node('label')` or cloud-specific provisioning logic.
 
-> ✅ *Tip: Combine both!* Use static agents for heavy caching (e.g., Maven repos) and dynamic agents for parallel test execution or PR validation.
+> ✅ *Tip: Use static agents for heavy caching (e.g., Maven repos) and dynamic agents for parallel test execution or PR validation.
 
 ---
 
 ### Security & Isolation Implications
 
-- **Static agents** may accumulate secrets, logs, or artifacts — increasing attack surface over time.
-- **Dynamic agents** provide natural isolation — each build runs in a fresh environment, reducing risk of cross-job contamination.
+- **Static agents** may accumulate secrets, logs, or artifacts - increasing attack surface over time.
+- **Dynamic agents** provide natural isolation - each build runs in a fresh environment, reducing risk of cross-job contamination.
 - Use **Workspace Cleanup Plugin** or container auto-removal to enforce hygiene even on static agents.
 
 ---
 
 ### Best Practices
 
-1. **Start static, evolve dynamic** — Begin with static agents for simplicity, then introduce dynamic scaling as needs grow.
-2. **Label everything** — Use descriptive labels (`os=linux`, `type=dynamic`, `pool=ephemeral`) to route jobs precisely.
-3. **Monitor provisioning** — Set timeouts and alerts for failed dynamic agent launches.
-4. **Capture logs/artifacts** — Since dynamic agents vanish, ensure logs and artifacts are archived or streamed to storage.
-5. **Test failover** — Simulate agent failures to ensure your pipelines handle dynamic provisioning errors gracefully.
+1. **Start static, evolve dynamic** - Begin with static agents for simplicity, then introduce dynamic scaling as needs grow.
+2. **Label everything** - Use descriptive labels (`os=linux`, `type=dynamic`, `pool=ephemeral`) to route jobs precisely.
+3. **Monitor provisioning** - Set timeouts and alerts for failed dynamic agent launches.
+4. **Capture logs/artifacts** - Since dynamic agents vanish, ensure logs and artifacts are archived or streamed to storage.
+5. **Test failover** - Simulate agent failures to ensure your pipelines handle dynamic provisioning errors gracefully.
 
 ---
 
-### Example: Pipeline with Dynamic Agent (Kubernetes)
+**Example: Pipeline with Dynamic Agent (Kubernetes)**
 
-```groovy
+```groovy 
 pipeline {
-    agent none
-    stages {
-        stage('Build') {
-            agent {
-                kubernetes {
-                    label 'dynamic-builder'
-                    yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: maven
-    image: maven:3.8.6-openjdk-11
-    command: ['cat']
-    tty: true
-'''
-                }
-            }
-            steps {
-                sh 'mvn clean package'
-            }
+  agent none 
+  stages {
+    stage('Build') {
+      agent {
+        kubernetes {
+          label 'dynamic-builder' 
+          yaml 
+          ''' apiVersion : v1 kind : Pod spec
+              : containers : -name : maven image
+              : maven : 3.8.6 -
+                openjdk - 11 command : ['cat'] tty : true
+          '''
         }
+      }
+      steps { sh 'mvn clean package' }
     }
+  }
 }
 ```
 
 > This spawns a fresh Maven container per build — no leftover state, auto-scaled, and isolated.
 
 ---
-
-### Summary
-
-- **Controller** = Scheduler + Orchestrator (always static)
-- **Static Agent** = Persistent worker — reliable but costly
-- **Dynamic Agent** = Ephemeral worker — efficient, scalable, secure
-
-Choose static for consistency and caching; choose dynamic for scalability, cost, and security. Modern Jenkins thrives on dynamic agents — especially in cloud-native and Kubernetes environments — but static agents still have their place in legacy or state-heavy workflows.
-
-> 🔄 *Hybrid is healthy.* Many teams run a small pool of static agents for infra tasks and caches, while delegating builds/tests to dynamic fleets.
