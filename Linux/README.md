@@ -1,25 +1,17 @@
 ## Phase 0: Foundation & Lab Setup (Week 1)
 
 **Objective:** Prepare the lab and develop fundamental Linux concepts
-
 ## Topics
 
 - **RHEL Access:**
-    
     - Join the Red Hat Developer Program for a free RHEL subscription (updates included)
-        
     - Use a 1:1 clone: AlmaLinux or Rocky Linux (identical for exam purposes)
         
 - **Lab Setup:**
-    
     - Install a virtualization platform (VirtualBox/VMware Player/Workstation)
-        
     - Set up RHEL or a clone in a VM
-        
     - Create multiple snapshots (e.g., fresh OS, after user creation, before LVM setup)
-        
     - Add extra virtual disks for hands-on storage/LVM practice
-        
     - Configure SSH key authentication between your VMs early
         
 - **Linux Basics:**
